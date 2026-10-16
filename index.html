@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UsedPhoneHub.com</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+
+:root {
+  --color-primary: #0F172A;
+  --color-on-primary: #FFFFFF;
+  --color-secondary: #334155;
+  --color-accent: #006FFF;
+  --color-accent-soft: #E8F1FF;
+  --color-background: #F8FAFC;
+  --color-foreground: #020617;
+  --color-muted: #E8ECF1;
+  --color-border: #E2E8F0;
+  --radius-card: 16px;
+  --shadow-card: 0 4px 24px rgba(15, 23, 42, 0.06);
+  --shadow-lift: 0 12px 40px rgba(15, 23, 42, 0.12);
+  --space-section: 96px;
+  --max-width: 1200px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+
+section { padding: var(--space-section) 0; }
+section.alt { background: #FFFFFF; }
+
+/* ---------- reveal animation ---------- */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .hero h1 { animation: none; }
+}
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  padding: 120px 0 100px;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 0%, rgba(3, 105, 161, 0.08), transparent),
+    radial-gradient(ellipse 50% 40% at 85% 10%, rgba(3, 105, 161, 0.06), transparent),
+    var(--color-background);
+  overflow: hidden;
+  text-align: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--color-primary); color: var(--color-on-primary);
+  font-size: clamp(18px, 2.2vw, 23px); font-weight: 700; letter-spacing: 6px;
+  padding: 16px 42px; border-radius: 999px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.22);
+}
+.hero-badge svg { width: 24px; height: 24px; }
+.hero h1 {
+  font-size: clamp(34px, 8vw, 92px);
+  font-weight: 900; letter-spacing: -0.03em; line-height: 1.05;
+  background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-accent) 38%, #4D9BFF 50%, var(--color-accent) 62%, var(--color-primary) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin-bottom: 24px;
+  animation: h1-flow 9s ease-in-out infinite;
+}
+@keyframes h1-flow {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 100% 0; }
+}
+.hero-sub {
+  font-size: clamp(18px, 2.4vw, 24px); color: var(--color-secondary);
+  font-weight: 500; letter-spacing: 2px; margin-bottom: 64px;
+}
+.hero-figure {
+  max-width: 880px; margin: 0 auto;
+}
+.hero-figure img { width: 100%; height: auto; display: block; filter: drop-shadow(0 24px 48px rgba(15, 23, 42, 0.14)); }
+
+/* ---------- section headings ---------- */
+.sec-head { text-align: center; margin-bottom: 56px; }
+.sec-orn {
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  margin-bottom: 20px; color: var(--color-accent);
+}
+/* 模块装饰：双胶囊 —— 模块一=前实后虚，模块二=前虚后实 */
+.sec-orn .pill { width: 26px; height: 8px; border-radius: 4px; background: var(--color-accent); }
+.orn-a .pill1 { opacity: 1; }
+.orn-a .pill2 { opacity: .22; }
+.orn-b .pill1 { opacity: .22; }
+.orn-b .pill2 { opacity: 1; }
+.dark-section .sec-orn { color: #6EB5FF; }
+.dark-section .sec-orn .pill { background: #6EB5FF; }
+.sec-head h2 {
+  font-size: clamp(30px, 4.4vw, 46px); font-weight: 900;
+  color: var(--color-accent); letter-spacing: 0.02em; line-height: 1.25;
+}
+.sec-rule {
+  width: 72px; height: 5px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--color-accent), #6EB5FF);
+  margin: 22px auto 0;
+}
+
+/* ---------- slide2 ---------- */
+.chip-row {
+  display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
+  gap: 14px; margin-bottom: 56px;
+}
+.chip {
+  background: linear-gradient(135deg, var(--color-primary), #1E3A5F);
+  color: #FFFFFF; font-weight: 700; font-size: clamp(15px, 1.8vw, 19px);
+  padding: 14px 30px; border-radius: 999px;
+  box-shadow: var(--shadow-card); letter-spacing: 1px;
+}
+.chip-row .plus { font-size: 26px; font-weight: 800; color: var(--color-accent); }
+.m-brk { display: none; }
+.grid-2x2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+}
+.img-card {
+  background: #FFFFFF; border: 1px solid var(--color-border);
+  border-radius: var(--radius-card); overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.img-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.img-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- slide3 ---------- */
+.split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: center; }
+.lead-text {
+  font-size: clamp(18px, 2vw, 22px); color: var(--color-foreground);
+  font-weight: 500; line-height: 2;
+}
+.lead-text strong { color: var(--color-accent); font-weight: 800; }
+.figure-tall img { max-height: 560px; width: auto; max-width: 100%; }
+
+/* ---------- slide4 ---------- */
+.s4-title {
+  text-align: center; font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900; color: var(--color-accent); margin-bottom: 20px;
+}
+.s4-body {
+  max-width: 860px; margin: 0 auto 56px; text-align: center;
+  font-size: clamp(16px, 1.8vw, 19px); color: var(--color-secondary); line-height: 2;
+}
+.s4-body strong { color: var(--color-accent); font-weight: 800; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-items: end; }
+.grid-4 img { width: 100%; height: auto; display: block; }
+.png-plain { text-align: center; }
+.png-plain img { max-width: 100%; height: auto; display: inline-block; }
+
+/* ---------- slide5 ---------- */
+.flow-row {
+  display: flex; align-items: stretch; justify-content: center;
+  gap: 0; margin-bottom: 40px; flex-wrap: wrap;
+}
+.flow-step {
+  flex: 1 1 220px; max-width: 280px;
+  background: #FFFFFF; border: 1px solid var(--color-border);
+  border-radius: var(--radius-card); padding: 26px 22px;
+  box-shadow: var(--shadow-card);
+  font-size: 16px; font-weight: 600; color: var(--color-primary);
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  line-height: 1.7;
+}
+.flow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 12px; color: var(--color-accent); flex: 0 0 auto;
+  font-size: 28px; font-weight: 800;
+}
+.a2a-banner {
+  background: linear-gradient(120deg, var(--color-primary), #164E78);
+  color: #FFFFFF; border-radius: var(--radius-card);
+  padding: 34px 40px; text-align: center;
+  font-size: clamp(17px, 2.2vw, 22px); font-weight: 700; line-height: 1.9;
+  margin-bottom: 40px; box-shadow: var(--shadow-lift);
+}
+.agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 40px; }
+.agent-card {
+  background: #FFFFFF; border: 1px solid var(--color-border);
+  border-top: 4px solid var(--color-accent);
+  border-radius: var(--radius-card); padding: 36px 34px;
+  box-shadow: var(--shadow-card);
+}
+.agent-card h3 {
+  font-size: 24px; font-weight: 900; color: var(--color-primary); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.agent-card h3 svg { width: 28px; height: 28px; color: var(--color-accent); flex: 0 0 auto; }
+.agent-card p { font-size: 16.5px; color: var(--color-secondary); line-height: 2; }
+.agent-card.wide {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 20px; text-align: left;
+  background: linear-gradient(120deg, #FFFFFF, var(--color-accent-soft));
+  border: 1px solid #C7DBFF; border-top: 4px solid var(--color-accent);
+}
+.agent-card.wide h3 { margin-bottom: 0; flex: 0 0 auto; }
+.agent-card.wide p { margin: 0; }
+.s5-note { margin-top: -14px; }
+
+/* ---------- slide6 diagram ---------- */
+.diagram {
+  background: #FFFFFF; border: 1px solid var(--color-border);
+  border-radius: 24px; box-shadow: var(--shadow-card);
+  padding: 48px 40px; margin-bottom: 40px;
+}
+.dg-grid { display: grid; grid-template-columns: 190px 230px 40px 1fr; grid-template-rows: 1fr 1fr; row-gap: 30px; align-items: center; }
+.dg-mode { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.dg-mode .dg-node { flex: 0 0 150px; }
+.dg-node.mode.b1 { border-color: var(--color-accent); color: var(--color-accent); }
+.dg-node.mode .nodicon { width: 24px; height: 24px; display: block; margin: 0 auto 8px; }
+.dg-node.mode.b2 { border-color: #9333EA; color: #9333EA; }
+.dg-varr { display: flex; justify-content: center; }
+.dg-varr.c1 { color: var(--color-accent); }
+.dg-varr.c2 { color: #9333EA; }
+.dg-varr svg { width: 26px; height: 26px; }
+.dg-hubcell { grid-column: 2; grid-row: 1 / span 2; }
+.dg-varr.r1 { grid-column: 3; grid-row: 1; }
+.dg-varr.r2 { grid-column: 3; grid-row: 2; }
+.dg-mode.m1 { grid-column: 1; grid-row: 1; }
+.dg-mode.m2 { grid-column: 1; grid-row: 2; }
+.dg-top { grid-column: 4; grid-row: 1; }
+.dg-group { grid-column: 4; grid-row: 2; }
+/* 手机端专用下引箭头（桌面隐藏） */
+.dg-varr.m-drop { display: none; }
+.dg-node {
+  background: var(--color-background); border: 1.5px solid var(--color-border);
+  border-radius: 12px; padding: 16px 12px; text-align: center;
+  font-weight: 700; color: var(--color-primary); font-size: 16px; line-height: 1.5;
+}
+.dg-node.mode { border-color: #94A3B8; background: #FFFFFF; }
+.dg-hub {
+  background: linear-gradient(150deg, var(--color-primary), #164E78);
+  border-radius: 18px; padding: 28px 20px; text-align: center;
+  color: #FFFFFF; box-shadow: var(--shadow-lift);
+}
+.dg-hub .hub-title { font-size: 26px; font-weight: 900; letter-spacing: 2px; margin-bottom: 18px; }
+.dg-hub img { width: 72px; height: auto; margin: 0 auto 14px; display: block; filter: brightness(1.05); }
+.dg-hub .hub-item {
+  background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 10px; padding: 10px 8px; font-size: 14.5px; font-weight: 600;
+  margin-top: 10px; line-height: 1.5;
+}
+/* 上通路：客户独立站 */
+.dg-top {
+  min-width: 560px;
+}
+.dg-toplane {
+  border: 1.5px dashed var(--color-border); border-radius: 16px;
+  padding: 18px 14px; display: flex; align-items: center; gap: 10px;
+  background: var(--color-background);
+}
+/* 下通路：黄色虚线分组（AI贸易群），内部两行独立箭头路径 */
+.dg-group {
+  position: relative;
+  min-width: 560px;
+  border: 2px dashed #F5A623; border-radius: 16px;
+  padding: 44px 16px; background: var(--color-background);
+  box-sizing: border-box;
+}
+.dg-fan { display: grid; grid-template-columns: 138px 28px 1fr 28px 1fr; grid-template-rows: auto auto; gap: 18px 8px; align-items: center; }
+.dg-fan > .dg-agentcell { display: flex; flex-direction: column; justify-content: center; }
+.dg-agentcell { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 0 0 138px; height: fit-content; align-self: center; }
+.dg-agentcell .dg-agents { width: 100%; height: fit-content; }
+.dg-fan > .dg-agentcell { flex: none; width: 138px; }
+.dg-farrow { display: flex; flex-direction: column; align-items: center; color: var(--color-accent); }
+.dg-farrow .lbl { font-size: 12px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.dg-farrow svg { width: 22px; height: 22px; }
+/* AI买手：赋能胶囊，悬浮于商家框外 */
+.dg-merchant { position: relative; }
+.dg-merchant .dg-step { width: 100%; }
+.dg-merchant .dg-chip { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.dg-merchant .chip-top { top: -32px; }
+.dg-merchant .chip-bot { bottom: -32px; }
+.dg-chip {
+  background: var(--color-accent-soft); color: var(--color-accent);
+  font-size: 12.5px; font-weight: 800; padding: 4px 14px; border-radius: 999px; line-height: 1.4;
+}
+.dg-farrow.c1 { color: var(--color-accent); }
+.dg-farrow.c2 { color: #9333EA; }
+.dg-under { display: flex; flex-direction: column; align-items: center; width: fit-content; margin: 0 18% 0 auto; }
+.dg-connector { width: 2px; height: 26px; background: #F5A623; }
+.dg-platform {
+  background: #FFFFFF; border: 1.5px solid var(--color-accent);
+  border-radius: 10px; padding: 8px 20px;
+  font-size: 14.5px; font-weight: 800; color: var(--color-primary);
+  line-height: 1.5; text-align: center;
+  box-shadow: var(--shadow-card);
+}
+.dg-platform span { color: var(--color-secondary); font-weight: 600; font-size: 13px; }
+.dg-agents {
+  background: #FFFFFF; border: 1.5px solid var(--color-accent);
+  border-radius: 12px; padding: 12px 10px; flex: 0 0 auto;
+}
+.dg-agents .ag-main { font-weight: 800; color: var(--color-accent); font-size: 15px; text-align: center; margin-bottom: 8px; }
+.dg-agents .ag-sub { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+.dg-agents .ag-sub span {
+  background: var(--color-accent-soft); color: var(--color-accent);
+  font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+}
+.dg-step {
+  background: #FFFFFF; border: 1.5px solid var(--color-border);
+  border-radius: 10px; padding: 12px 10px; font-size: 13.5px; font-weight: 700;
+  color: var(--color-primary); text-align: center; line-height: 1.55; flex: 1 1 auto; min-width: 0;
+}
+.dg-step .st-line { margin: 3px 0; }
+/* 大群/全球采购商：紫色链路终点（桌面+移动统一） */
+.dg-step.c2n, .dg-merchant.c2n .dg-step { border-color: #9333EA; color: #9333EA; }
+.dg-step .st-line.em {
+  background: var(--color-accent-soft); color: var(--color-accent);
+  border-radius: 7px; padding: 6px 6px; margin: 5px 0;
+}
+/* ---------- slide7 ---------- */
+.s7-figure {
+  border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lift);
+  margin-bottom: 48px; border: 1px solid var(--color-border);
+}
+.s7-figure img { width: 100%; display: block; }
+/* 图文并排卡：文字居左，右侧空位放图 */
+.s7-duo {
+  background: #FFFFFF; border: 1px solid var(--color-border);
+  border-radius: var(--radius-card); box-shadow: var(--shadow-card);
+  padding: 30px 36px; display: flex; gap: 30px; align-items: center; margin-bottom: 36px;
+}
+.s7-duo .s7-p1 { padding: 0; margin: 0; flex: 1; font-size: clamp(15.5px, 1.7vw, 17.5px); color: var(--color-foreground); line-height: 2.05; }
+.s7-duo .s7-p1 p { margin: 0; }
+.s7-duo .s7-p1 p + p { margin-top: 14px; font-weight: 600; }
+.s7-duo .s7-p1 p strong { color: var(--color-accent); font-weight: 800; }
+.s7-duo img { width: 320px; flex: 0 0 320px; border-radius: 12px; display: block; }
+.s7-p1 strong { color: var(--color-accent); font-weight: 800; }
+/* 无框双段文字 */
+.s7-plain { text-align: center; margin-bottom: 32px; }
+.s7-plain p { font-size: clamp(16px, 1.9vw, 19px); color: var(--color-primary); line-height: 2; font-weight: 600; }
+.s7-plain p + p { margin-top: 10px; font-weight: 800; }
+.s7-plain strong { color: var(--color-accent); font-weight: 800; }
+/* 小尺寸配图：紧跟对应文字 */
+.s7-fig-sm {
+  max-width: 760px; margin: 0 auto 36px;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: var(--shadow-card); border: 1px solid var(--color-border);
+}
+.s7-fig-sm img { width: 100%; display: block; }
+.s7-figure {
+  border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lift);
+  border: 1px solid var(--color-border); margin-bottom: 44px;
+}
+.s7-figure img { width: 100%; display: block; }
+
+/* ---------- slide8 ---------- */
+.s8-title { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--color-accent); margin-bottom: 20px; text-align: center; }
+.s8-badge {
+  display: block; width: fit-content; margin: 0 auto 44px;
+  background: var(--color-accent-soft); color: var(--color-accent);
+  font-weight: 800; font-size: clamp(15px, 1.8vw, 18px);
+  padding: 12px 28px; border-radius: 12px;
+  border: 1px solid #C7DBFF;
+}
+.s8-body {
+  max-width: 980px; margin: 0 auto;
+  font-size: clamp(15.5px, 1.7vw, 17.5px); color: var(--color-secondary);
+  line-height: 2.05; text-align: center;
+}
+.s8-body strong { color: var(--color-primary); }
+
+/* ---------- slide9 dark ---------- */
+.dark-section { background: var(--color-primary); color: #FFFFFF; }
+.dark-section .sec-head h2 { color: #FFFFFF; font-size: clamp(22px, 3vw, 32px); letter-spacing: 0.04em; }
+.dark-section .sec-rule { background: linear-gradient(90deg, #38BDF8, #0EA5E9); }
+.s9-lead {
+  text-align: center; font-size: clamp(17px, 2vw, 21px); font-weight: 600;
+  line-height: 2; max-width: 900px; margin: 0 auto 40px; color: #E2E8F0;
+}
+.s9-lead strong { color: #7DD3FC; font-weight: 800; }
+.s9-def {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius-card); padding: 36px 42px;
+  font-size: clamp(15px, 1.7vw, 17px); line-height: 2.1; color: #CBD5E1;
+  margin: 0 0 56px;
+}
+.s9-def strong { color: #7DD3FC; font-weight: 700; }
+.s9-figure { border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(2, 6, 23, 0.6); border: 1px solid rgba(255,255,255,0.12); }
+.s9-figure img { width: 100%; display: block; }
+
+/* ---------- slide10 / 11 ---------- */
+.s10-sub {
+  text-align: center; font-size: clamp(16px, 2vw, 20px); font-weight: 700;
+  color: var(--color-accent); margin: -30px 0 48px;
+}
+.s11-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1024px) {
+  :root { --space-section: 72px; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 860px) {
+  .container { padding: 0 20px; }
+  .grid-2x2 { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-4 { gap: 16px; }
+  .grid-2, .agent-grid, .s11-grid { grid-template-columns: 1fr; }
+  .split, .s8-grid { grid-template-columns: 1fr; gap: 36px; }
+  /* 产品胶囊：单行排布，缩小但保持深色突出 */
+  .chip-row { display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; margin-bottom: 40px; }
+  .chip-row .chip { margin: 0 2px; padding: 9px 9px; font-size: 11px; letter-spacing: 0; white-space: nowrap; }
+  .chip-row .plus { margin: 0 1px; font-size: 13px; }
+  .m-brk { display: block; }
+  /* 大机器图缩小居中 */
+  .png-plain img { max-width: 240px; margin: 0 auto; }
+  /* 交易流程：保持桌面横向排版，整体缩小 */
+  .flow-row { flex-wrap: nowrap; margin-bottom: 28px; }
+  .flow-step { flex: 1 1 0; min-width: 0; max-width: none; padding: 10px 8px; font-size: 12px; line-height: 1.55; }
+  .flow-arrow { font-size: 15px; padding: 0 3px; }
+  /* 智能体卡片紧凑化（保持桌面排版结构） */
+  .agent-card { padding: 18px 16px; }
+  .agent-card h3 { font-size: 17px; margin-bottom: 8px; }
+  .agent-card h3 svg { width: 20px; height: 20px; }
+  .agent-card p { font-size: 13.5px; line-height: 1.8; }
+  .agent-card.wide { flex-direction: row; text-align: left; gap: 12px; }
+  .agent-card.wide h3 { flex: 0 0 auto; }
+  .a2a-banner { padding: 20px 16px; font-size: 15px; }
+  .hero { padding: 72px 0 64px; }
+  .hero-badge { font-size: 16px; letter-spacing: 3px; padding: 12px 28px; margin-bottom: 30px; }
+  .s7-duo { flex-direction: column; padding: 22px 20px; align-items: stretch; }
+  .s7-duo img { width: 100%; flex: none; }
+  .s9-def { padding: 24px 20px; }
+  /* 架构图手机端：双模式并排 → 全宽Hub → 双链路并排（放大呈现，不用缩放） */
+  .diagram { padding: 20px 12px; }
+  .dg-top, .dg-group { min-width: 0; }
+  .dg-varr.r1, .dg-varr.r2 { display: none; }
+  .dg-grid { grid-template-columns: 1fr 1fr; gap: 10px 12px; align-items: start; }
+  /* 对应关系：授权站（紫）↔ AI贸易群黄框（左），代验代卖（蓝）↔ 客户独立站（右） */
+  .dg-mode.m2 { grid-column: 1; grid-row: 1; }
+  .dg-mode.m1 { grid-column: 2; grid-row: 1; }
+  .dg-mode { flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px; }
+  .dg-mode .dg-node { flex: 0 0 auto; width: 100%; }
+  .dg-hubcell { grid-column: 1 / -1; grid-row: 2; }
+  .dg-hub { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 12px; padding: 16px 12px; }
+  .dg-hub .hub-title { width: 100%; text-align: center; font-size: 20px; margin-bottom: 0; }
+  .dg-hub img { width: 60px; margin: 0; }
+  .dg-hub .hub-item { flex: 1 1 110px; margin: 0; font-size: 12.5px; }
+  .dg-varr.m-drop { display: flex; justify-content: center; }
+  .dg-varr.m-drop.d1 { grid-column: 1; grid-row: 3; }
+  .dg-varr.m-drop.d2 { grid-column: 2; grid-row: 3; }
+  .dg-varr svg { transform: rotate(90deg); }
+  .dg-group { grid-column: 1; grid-row: 4; padding: 14px 4px; }
+  .dg-top { grid-column: 2; grid-row: 4; }
+  .dg-toplane { flex-direction: column; align-items: stretch; gap: 8px; padding: 14px 10px; }
+  .dg-toplane .dg-agentcell { flex: 0 0 auto; width: 100%; }
+  /* 黄框内两条链路并排：小群→下游商家 | 大群→全球采购商 */
+  .dg-fan { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 5px; }
+  .dg-fan > * { grid-column: auto !important; grid-row: auto !important; }
+  .dg-fan > .dg-agentcell { grid-column: 1 / -1 !important; grid-row: 1 !important; width: 100%; }
+  .dg-fan > .dg-farrow:nth-child(2) { grid-column: 1 !important; grid-row: 2 !important; }
+  .dg-fan > .dg-farrow.f2 { grid-column: 2 !important; grid-row: 2 !important; display: flex; }
+  .dg-fan > .dg-step:nth-child(3) { grid-column: 1 !important; grid-row: 3 !important; }
+  .dg-fan > .dg-step:nth-child(7) { grid-column: 2 !important; grid-row: 3 !important; }
+  .dg-fan > .dg-farrow.c1 { grid-column: 1 !important; grid-row: 4 !important; }
+  .dg-fan > .dg-farrow.c2:not(.f2) { grid-column: 2 !important; grid-row: 4 !important; }
+  .dg-fan > .dg-merchant:nth-child(5) { grid-column: 1 !important; grid-row: 5 !important; }
+  .dg-fan > .dg-merchant:nth-child(9) { grid-column: 2 !important; grid-row: 5 !important; }
+  .dg-fan > .dg-step, .dg-fan > .dg-merchant { align-self: start; }
+  .dg-farrow { justify-self: center; }
+  .dg-farrow svg, .dg-varr.m-drop svg { width: 30px; height: 30px; }
+  .dg-farrow svg { transform: rotate(90deg); }
+  /* AI销售师胶囊统一放上（仅移动端调整顺序） */
+  .dg-fan > .dg-agentcell .dg-chip { order: -1; }
+  /* AI买手胶囊统一放下 */
+  .dg-merchant { display: flex; flex-direction: column; }
+  .dg-merchant .chip-top { order: 2; margin: 5px auto 0; }
+  /* 同售标签：箭头中部左侧，箭头保持列内居中 */
+  .dg-fan > .dg-farrow:nth-child(2) { position: relative; }
+  .dg-fan > .dg-farrow:nth-child(2) .lbl { position: absolute; right: calc(50% + 15px); top: 50%; transform: translateY(-50%); margin: 0; font-size: 11px; white-space: nowrap; }
+  /* 小群/大群单行（m-blk 行内）；步骤框字号微缩保证一行放得下 */
+  .dg-fan .dg-step { font-size: 11px; padding: 8px 2px; }
+  .d-brk { display: none; }
+  .dg-step .st-sub { display: block; font-size: 10px; font-weight: 600; margin-top: 2px; white-space: nowrap; }
+  .dg-merchant .dg-chip { position: static; transform: none; display: block; width: fit-content; }
+  .dg-merchant .chip-bot { margin: 5px auto 0; }
+  .dg-agents { padding: 8px 6px; }
+  .dg-agents .ag-sub { gap: 4px; }
+  .dg-agents .ag-sub span { font-size: 10.5px; padding: 2px 6px; }
+  .dg-chip { font-size: 11px; padding: 3px 10px; }
+  .dg-node { font-size: 13.5px; padding: 10px 8px; }
+  .dg-step { font-size: 11.5px; padding: 8px 5px; }
+  .dg-under { width: 50%; margin: 14px 0 0; }
+  .dg-platform { font-size: 12px; padding: 6px 10px; }
+  .dg-platform span { font-size: 10.5px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO · Slide 1 ============ -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      UPHub 联盟
+    </div>
+    <h1 class="reveal">UsedPhoneHub.com</h1>
+    <p class="hero-sub reveal">网站马上开放，敬请期待！</p>
+    <div class="hero-figure reveal">
+      <img src="assets/hero-product-family.png" alt="mDetectBot 产品体系全家福">
+    </div>
+  </div>
+</header>
+
+<!-- ============ Slide 2 · mDetectBot AI产品体系 ============ -->
+<section class="alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-orn orn-a"><span class="pill pill1"></span><span class="pill pill2"></span></div>
+      <h2>mDetectBot AI产品体系</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="chip-row reveal">
+      <span class="chip">mDetectBot验机机器人</span>
+      <span class="plus">+</span>
+      <span class="chip">AI ERP</span>
+      <span class="plus">+</span>
+      <span class="chip">AI贸易群</span>
+    </div>
+    <div class="grid-2x2">
+      <div class="img-card reveal"><img src="assets/s2-warehouse-inbound.png" alt="入仓区 · 包裹信息识别与一键入库"></div>
+      <div class="img-card reveal"><img src="assets/s2-qa-listing.png" alt="质检完成 · 手机信息扫码上架"></div>
+      <div class="img-card reveal"><img src="assets/s2-warehouse-zones.png" alt="入库区 · 质检区 · 智能货架区"></div>
+      <div class="img-card reveal"><img src="assets/s2-sales-office.jpg" alt="销售与电商 · 一键多平台同售"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Slide 3 · 硬科技质检 ============ -->
+<section>
+  <div class="container">
+    <div class="split">
+      <p class="lead-text reveal">MDetectBot高度集成了视觉识别AI、插线传感AI、机器人、自动化流水线等硬科技技术，<strong>2分钟</strong>完成二手手机的<strong>上百项质检项目</strong>，全无人自动，即使在深夜也可以自行工作。</p>
+      <div class="png-plain reveal">
+        <img src="assets/s3-machine.png" alt="壹准验机机器人 mDetectBot">
+      </div>
+    </div>
+    <div class="grid-4" style="margin-top: 72px;">
+      <img class="reveal" src="assets/s3-extra-1.png" alt="多语种适配 · 可定制语种">
+      <img class="reveal" src="assets/s3-extra-2.png" alt="质检维度适配 · 可定制质检工作流程">
+      <img class="reveal" src="assets/s3-extra-3.png" alt="分级标准适配 · 可定制成色分级">
+      <img class="reveal" src="assets/s3-extra-4.png" alt="定价标准适配 · 可定制报价逻辑">
+    </div>
+  </div>
+</section>
+
+<!-- ============ Slide 4 · AI agent ============ -->
+<section class="alt">
+  <div class="container">
+    <h2 class="s4-title reveal">AI自动化方式做二手手机生意！</h2>
+    <p class="s4-body reveal"><strong>AI agent</strong>：销售agent自动完成商城上架和商品描述，定价agent负责制定价格，客服agent负责回答客户的问询。</p>
+    <div class="grid-2">
+      <div class="img-card reveal"><img src="assets/s4-ai-buyer.jpeg" alt="AI买手对话下单"></div>
+      <div class="img-card reveal"><img src="assets/s4-agent-dashboard.png" alt="壹准二手通Agent · AI买手/AI销售/AI经分/AI财税"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Slide 5 · AI交易平台 ============ -->
+<section>
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>基于机器人标准验机的<br class="m-brk">AI交易平台<br>aiphonemarket.com</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="flow-row reveal">
+      <div class="flow-step">验机机器人解决“对齐”问题</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">壹准可信验机报告成为硬通货</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">AI智能体基于报告数据进行自动化的供需匹配和交易磋商</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">交易成本大幅度降低。</div>
+    </div>
+
+    <div class="a2a-banner reveal">率先迈进AI电商A2A（智能体对智能体协作）时代：<br>买家的Agent和卖家的Agent之间直接协作。</div>
+
+    <div class="agent-grid">
+      <div class="agent-card reveal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>买方智能体</h3>
+        <p>是懂行懂老板的“贴身管家”，在互动中不断熟悉老板和自家公司策略。</p>
+      </div>
+      <div class="agent-card reveal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>卖方智能体</h3>
+        <p>是“数字掌柜”，二十四小时守在后台，随时报出自家货品的真实性能、库存数量和底线价格。</p>
+      </div>
+      <div class="agent-card wide reveal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></h3>
+        <p>买方智能体跟成千上万个卖家的<strong>“数字掌柜”</strong>（客服智能体、定价智能体、销售智能体）在后台飞速询盘、问货、报价、核对细节。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Slide 6 · UPHub联盟 ============ -->
+<section class="alt">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-orn orn-b"><span class="pill pill1"></span><span class="pill pill2"></span></div>
+      <h2>UPHub联盟<br class="m-brk">（UPHub Alliance）</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="s4-body reveal">全世界的<strong>mDetectBot AI产品</strong>的用户<br class="m-brk">可加入<strong>UPHub联盟</strong>。</p>
+
+    <div class="diagram reveal">
+      <div class="dg-grid">
+        <!-- 接入模式：各自独立箭头汇入壹准Hub -->
+        <div class="dg-mode m1">
+          <div class="dg-node mode b1"><svg class="nodicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>代验<br>代卖</div>
+          <div class="dg-varr c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </div>
+        <div class="dg-mode m2">
+          <div class="dg-node mode b2"><svg class="nodicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>授权站<br>自验自卖</div>
+          <div class="dg-varr c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </div>
+        <!-- 壹准Hub -->
+        <div class="dg-hub dg-hubcell">
+          <div class="hub-title">壹准Hub</div>
+          <img src="assets/s6-machine-thumb.png" alt="">
+          <div class="hub-item">壹准验机机器人</div>
+          <div class="hub-item">《标准质检报告》</div>
+        </div>
+        <div class="dg-varr m-drop d1 c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="dg-varr m-drop d2 c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="dg-varr r1 c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="dg-varr r2 c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <!-- 上通路：客户独立站 -->
+        <div class="dg-top">
+          <div class="dg-toplane">
+            <div class="dg-agentcell">
+              <span class="dg-chip">AI销售师</span>
+              <div class="dg-agents"><div class="ag-sub"><span>AI定价</span><span>AI上架</span><span>AI客服</span></div></div>
+            </div>
+            <div class="dg-farrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="dg-step">客户独立站（自有渠道）</div>
+            <div class="dg-farrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="dg-merchant">
+              <span class="dg-chip chip-top">AI买手</span>
+              <div class="dg-step">下游商家</div>
+            </div>
+          </div>
+        </div>
+        <!-- 下通路：黄色虚线分组（AI贸易群），两行独立箭头 -->
+        <div class="dg-group">
+          <div class="dg-fan">
+            <div class="dg-agentcell" style="grid-column: 1; grid-row: 1 / span 2;">
+              <div class="dg-agents"><div class="ag-sub"><span>AI定价</span><span>AI上架</span><span>AI客服</span></div></div>
+              <span class="dg-chip">AI销售师</span>
+            </div>
+            <div class="dg-farrow" style="grid-column: 2; grid-row: 1;">
+              <span class="lbl">同售</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="dg-step" style="grid-column: 3; grid-row: 1;">AI贸易<span class="m-blk">小群</span><br class="d-brk"><span class="st-sub">(定向曝光)</span></div>
+            <div class="dg-farrow c1" style="grid-column: 4; grid-row: 1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="dg-merchant" style="grid-column: 5; grid-row: 1;">
+              <span class="dg-chip chip-top">AI买手</span>
+              <div class="dg-step">下游商家</div>
+            </div>
+            <div class="dg-farrow c2 f2" style="grid-column: 2; grid-row: 2;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="dg-step c2n" style="grid-column: 3; grid-row: 2;">AI贸易<span class="m-blk">大群</span></div>
+            <div class="dg-farrow c2" style="grid-column: 4; grid-row: 2;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="dg-merchant c2n" style="grid-column: 5; grid-row: 2;">
+              <div class="dg-step">全球采购商</div>
+              <span class="dg-chip chip-bot">AI买手</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dg-under reveal">
+        <div class="dg-connector"></div>
+        <div class="dg-platform">aiphonemarket.com<br><span>（壹准国际B2B AI 贸易平台）</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Slide 7 · 共享仓 · 机互汇 ============ -->
+<section>
+  <div class="container">
+    <div class="s7-duo reveal">
+      <p class="s7-p1">UPHub联盟成员之间，通过<strong>机互汇</strong>（UPMAG，Used Phone Mutual Aid &amp; Trading Group）可以相互成为<strong>“共享仓”</strong>。（特别是对国外成员，他们去各个国家“投标”采购之后，没必要都运回到本地或者香港、迪拜，然后再卖到全世界。“共享仓”的做法是：在货源采购地入共享仓，mDetectBot检测后，再决策分配，需要翻新整备的运回翻新中心，一部分运回本地或香港、一部分就地存在当地共享仓，销售后由共享仓就近给客户发货，这样就可以大大节省物流和时间成本。）</p>
+      <img src="assets/s7-shared-warehouse.png" alt="共享仓 · 全球货源流通网络">
+    </div>
+    <div class="s7-duo reveal">
+      <div class="s7-p1">
+        <p>UPHub联盟成员之间，通过<strong>机互汇</strong>，把各自好卖的货品卖的更多更好，把不好卖的转给其他成员去卖。</p>
+        <p>UPHub联盟使世界范围<strong>“去中心化、去中间层”</strong>，香港、迪拜等是大Hub，其他地区国家是小Hub，形成一张高效的网络。</p>
+      </div>
+      <img src="assets/s7-decentralized.png" alt="去中心化网络 · 全球高效协作网络">
+    </div>
+  </div>
+</section>
+
+<!-- ============ Slide 8 · UPHub联盟 与 AI贸易群的关系 ============ -->
+<section class="alt">
+  <div class="container">
+    <h2 class="s8-title reveal">UPHub联盟 与 AI贸易群的关系</h2>
+    <div class="s8-badge reveal">UPHub联盟成员是AI贸易群的A类商户</div>
+    <div class="img-card reveal"><img src="assets/s8-relationship.png" alt="UPHub联盟与AI贸易群关系图"></div>
+    <p class="s8-body reveal" style="margin-top: 44px;"><strong>机互汇（二手手机互助贸易群）</strong>UPMAG（Used Phone Mutual Aid &amp; Trading Group）：是AI贸易群中的小群，仅对壹准联盟成员开放。</p>
+  </div>
+</section>
+
+<!-- ============ Slide 9 · 自有品牌交易中心（暗色） ============ -->
+<section class="dark-section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>mDetectbot‑Powered Used Phone Trading Hub</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="s9-lead reveal">UPHub联盟成员可进一步在本国本地区发展成<strong>自有品牌的交易中心</strong>（mDetectbot-Powered Used Phone Trading Hub）。</p>
+    <div class="s9-def reveal"><strong>mDetectbot‑Powered Used Phone Trading Hub</strong>：由mDetectbot（壹准验机机器人）驱动的二手手机交易枢纽（交易中心、集散平台），提供一套以 mDetectbot自动化验机机器人 为核心能力的二手手机交易体系，集<strong>自动质检、验机报告、报价、库存（共享仓）、交易结算、供应链金融</strong>于一体，面向二手门店、回收商、批发供应链，实现标准化的二手手机流转交易枢纽。</div>
+    <div class="s9-figure reveal">
+      <img src="assets/s9-trading-hub.png" alt="mDetectbot驱动的二手手机交易枢纽">
+    </div>
+  </div>
+</section>
+
+<!-- ============ Slide 10-11 · AI贸易平台 ============ -->
+<section>
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>AI 贸易平台：aiphonemarket.com</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="s10-sub reveal">（A类商户可卖可买，B类注册商户只能买）</p>
+    <div class="img-card reveal"><img src="assets/s10-flow.jpg" alt="授权质检站生成质检报告 → 自动上架AI商城 → 全球多国买家轻松购买"></div>
+    <div class="s11-grid" style="margin-top: 28px;">
+      <div class="img-card reveal"><img src="assets/s11-report-mall.png" alt="质检报告与AI智能定价 · 商城详情页"></div>
+      <div class="img-card reveal"><img src="assets/s11-hk-store.jpeg" alt="香港授权质检站门店"></div>
+      <div class="img-card reveal"><img src="assets/s11-global-buyers.jpeg" alt="全球多国买家通过AI买手下单"></div>
+      <div class="img-card reveal"><img src="assets/s11-deal.jpeg" alt="竞拍成交 · 货款结算"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal');
+  if (reduced || !('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function (el) { io.observe(el); });
+})();
+
+/* 架构图：全尺寸保持桌面横向布局——屏宽不足时整体等比缩放；模式节点精确对齐 Hub 上下半区中心 */
+(function () {
+  var Z = 1;
+  function fit() {
+    try {
+      var d = document.querySelector('.diagram');
+      var grid = document.querySelector('.dg-grid');
+      if (!d || !grid) return;
+      var modes = document.querySelectorAll('.dg-mode');
+      if (window.innerWidth <= 860) {
+        /* 手机端：草图式两列布局，无需缩放/对齐 */
+        d.style.zoom = '';
+        grid.style.width = '';
+        modes.forEach(function (m) { m.style.transform = ''; });
+        Z = 1;
+        return;
+      }
+      d.style.zoom = '';
+      grid.style.width = '';
+      grid.style.width = 'max-content';
+      var nat = grid.scrollWidth;
+      grid.style.width = '';
+      var cs = getComputedStyle(d);
+      var avail = d.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 2;
+      if (nat > avail) {
+        Z = avail / nat;
+        d.style.zoom = Z;
+        grid.style.width = 'max-content';
+      } else {
+        Z = 1;
+      }
+      var hub = document.querySelector('.dg-hub');
+      if (!hub || modes.length < 2) return;
+      var h = hub.getBoundingClientRect();
+      modes.forEach(function (m, i) {
+        m.style.transform = '';
+        var r = m.getBoundingClientRect();
+        var target = h.top + h.height * (i === 0 ? 0.25 : 0.75);
+        var delta = (target - (r.top + r.height / 2)) / Z;
+        m.style.transform = 'translateY(' + delta.toFixed(1) + 'px)';
+      });
+    } catch (e) { /* 静默：下次触发重试 */ }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fit);
+  } else {
+    fit();
+  }
+  window.addEventListener('load', fit);
+  window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) { try { document.fonts.ready.then(fit).catch(function () {}); } catch (e) {} }
+  setTimeout(fit, 600);
+  setTimeout(fit, 1500);
+})();
+</script>
+
+</body>
+</html>

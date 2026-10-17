@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UsedPhoneHub.com</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+/* 字体使用系统栈，去外链（谷歌字体国内不可达且阻塞渲染） */
 
 :root {
   --color-primary: #0F172A;
@@ -20,13 +20,15 @@
   --radius-card: 16px;
   --shadow-card: 0 4px 24px rgba(15, 23, 42, 0.06);
   --shadow-lift: 0 12px 40px rgba(15, 23, 42, 0.12);
-  --space-section: 96px;
+  --space-section: 60px;
   --max-width: 1200px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* 手机浏览器"字号调大"防护：text-size-adjust 不继承，需逐元素禁用 font boosting，否则固定字号排版会被撑乱 */
+*, *::before, *::after { -webkit-text-size-adjust: 100% !important; text-size-adjust: 100% !important; }
 
 body {
   font-family: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -36,8 +38,9 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+img { max-width: 100%; }
 
-.container { max-width: var(--max-width); margin: 0 auto; padding: 0 32px; }
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 44px; }
 
 section { padding: var(--space-section) 0; }
 section.alt { background: #FFFFFF; }
@@ -49,12 +52,13 @@ section.alt { background: #FFFFFF; }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .hero h1 { animation: none; }
+  .scroll-hint svg { animation: none; }
 }
 
 /* ---------- hero ---------- */
 .hero {
   position: relative;
-  padding: 120px 0 100px;
+  padding: 56px 0 36px;
   background:
     radial-gradient(ellipse 60% 50% at 20% 0%, rgba(3, 105, 161, 0.08), transparent),
     radial-gradient(ellipse 50% 40% at 85% 10%, rgba(3, 105, 161, 0.06), transparent),
@@ -67,17 +71,17 @@ section.alt { background: #FFFFFF; }
   background: var(--color-primary); color: var(--color-on-primary);
   font-size: clamp(18px, 2.2vw, 23px); font-weight: 700; letter-spacing: 6px;
   padding: 16px 42px; border-radius: 999px;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.22);
 }
 .hero-badge svg { width: 24px; height: 24px; }
 .hero h1 {
-  font-size: clamp(34px, 8vw, 92px);
+  font-size: clamp(30px, 5.6vw, 64px);
   font-weight: 900; letter-spacing: -0.03em; line-height: 1.05;
   background: linear-gradient(120deg, var(--color-primary) 0%, var(--color-accent) 38%, #4D9BFF 50%, var(--color-accent) 62%, var(--color-primary) 100%);
   background-size: 250% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   animation: h1-flow 9s ease-in-out infinite;
 }
 @keyframes h1-flow {
@@ -85,28 +89,47 @@ section.alt { background: #FFFFFF; }
   50% { background-position: 100% 0; }
 }
 .hero-sub {
-  font-size: clamp(18px, 2.4vw, 24px); color: var(--color-secondary);
-  font-weight: 500; letter-spacing: 2px; margin-bottom: 64px;
+  font-size: clamp(20px, 2.8vw, 30px); color: var(--color-secondary);
+  font-weight: 600; letter-spacing: 2px; margin-bottom: 18px;
 }
 .hero-figure {
-  max-width: 880px; margin: 0 auto;
+  max-width: 660px; margin: 0 auto;
 }
 .hero-figure img { width: 100%; height: auto; display: block; filter: drop-shadow(0 24px 48px rgba(15, 23, 42, 0.14)); }
 
-/* ---------- section headings ---------- */
-.sec-head { text-align: center; margin-bottom: 56px; }
-.sec-orn {
-  display: flex; justify-content: center; align-items: center; gap: 8px;
-  margin-bottom: 20px; color: var(--color-accent);
+/* 上滑引导胶囊 */
+.scroll-hint {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FFFFFF; border: 1px solid var(--color-border);
+  border-radius: 999px; padding: 7px 18px; cursor: pointer;
+  font-size: 12.5px; font-weight: 600; color: var(--color-secondary);
+  margin-bottom: 24px; box-shadow: var(--shadow-card);
 }
-/* 模块装饰：双胶囊 —— 模块一=前实后虚，模块二=前虚后实 */
-.sec-orn .pill { width: 26px; height: 8px; border-radius: 4px; background: var(--color-accent); }
-.orn-a .pill1 { opacity: 1; }
-.orn-a .pill2 { opacity: .22; }
-.orn-b .pill1 { opacity: .22; }
-.orn-b .pill2 { opacity: 1; }
-.dark-section .sec-orn { color: #6EB5FF; }
-.dark-section .sec-orn .pill { background: #6EB5FF; }
+.scroll-hint svg { width: 14px; height: 14px; color: var(--color-accent); animation: hint-bob 1.8s ease-in-out infinite; }
+@keyframes hint-bob { 0%, 100% { transform: translateY(-1px); } 50% { transform: translateY(3px); } }
+
+
+.hero-contact {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 9px 18px;
+  margin: 20px auto 0; max-width: 640px;
+  background: #FFFFFF; border: 1px solid var(--color-border);
+  border-radius: 16px; padding: 14px 24px;
+  box-shadow: var(--shadow-card);
+  font-size: clamp(13px, 1.6vw, 15.5px); color: var(--color-secondary); font-weight: 500;
+  justify-items: center;
+}
+.hero-contact b { color: var(--color-primary); font-weight: 800; }
+
+
+/* ---------- section headings ---------- */
+.sec-head { text-align: center; margin-bottom: 36px; }
+.sec-orn { display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+/* 模块序号小胶囊：Part one / two / three */
+.sec-orn .part {
+  background: #FFFFFF; border: 1.5px solid var(--color-accent); color: var(--color-accent);
+  font-size: clamp(12px, 1.4vw, 14.5px); font-weight: 800; letter-spacing: 1px;
+  padding: 5px 16px; border-radius: 999px; line-height: 1.4;
+}
 .sec-head h2 {
   font-size: clamp(30px, 4.4vw, 46px); font-weight: 900;
   color: var(--color-accent); letter-spacing: 0.02em; line-height: 1.25;
@@ -120,7 +143,7 @@ section.alt { background: #FFFFFF; }
 /* ---------- slide2 ---------- */
 .chip-row {
   display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
-  gap: 14px; margin-bottom: 56px;
+  gap: 14px; margin-bottom: 40px;
 }
 .chip {
   background: linear-gradient(135deg, var(--color-primary), #1E3A5F);
@@ -143,7 +166,9 @@ section.alt { background: #FFFFFF; }
 .img-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* ---------- slide3 ---------- */
-.split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: center; }
+.split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+.s3-left { display: flex; flex-direction: column; justify-content: center; gap: 26px; }
+.s3-left .cap-row { margin-top: 0; justify-content: flex-start; gap: 12px 10px; }
 .lead-text {
   font-size: clamp(18px, 2vw, 22px); color: var(--color-foreground);
   font-weight: 500; line-height: 2;
@@ -157,20 +182,30 @@ section.alt { background: #FFFFFF; }
   font-weight: 900; color: var(--color-accent); margin-bottom: 20px;
 }
 .s4-body {
-  max-width: 860px; margin: 0 auto 56px; text-align: center;
+  max-width: 860px; margin: 0 auto 36px; text-align: center;
   font-size: clamp(16px, 1.8vw, 19px); color: var(--color-secondary); line-height: 2;
 }
 .s4-body strong { color: var(--color-accent); font-weight: 800; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-items: end; }
 .grid-4 img { width: 100%; height: auto; display: block; }
+
+/* 素材四块：字段胶囊 */
+.cap-row { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 44px; }
+.cap {
+  background: #FFFFFF; border: 1.5px solid var(--color-accent); color: var(--color-accent);
+  font-weight: 800; font-size: clamp(15px, 1.8vw, 19px);
+  padding: 13px 32px; border-radius: 999px; letter-spacing: 1px;
+  box-shadow: var(--shadow-card);
+}
+
 .png-plain { text-align: center; }
 .png-plain img { max-width: 100%; height: auto; display: inline-block; }
 
 /* ---------- slide5 ---------- */
 .flow-row {
   display: flex; align-items: stretch; justify-content: center;
-  gap: 0; margin-bottom: 40px; flex-wrap: wrap;
+  gap: 0; margin-bottom: 28px; flex-wrap: wrap;
 }
 .flow-step {
   flex: 1 1 220px; max-width: 280px;
@@ -186,14 +221,14 @@ section.alt { background: #FFFFFF; }
   padding: 0 12px; color: var(--color-accent); flex: 0 0 auto;
   font-size: 28px; font-weight: 800;
 }
-.a2a-banner {
-  background: linear-gradient(120deg, var(--color-primary), #164E78);
-  color: #FFFFFF; border-radius: var(--radius-card);
-  padding: 34px 40px; text-align: center;
-  font-size: clamp(17px, 2.2vw, 22px); font-weight: 700; line-height: 1.9;
-  margin-bottom: 40px; box-shadow: var(--shadow-lift);
+
+/* A2A：大标题式左对齐蓝字（比h2小） */
+.a2a-line {
+  font-size: clamp(20px, 2.8vw, 30px); font-weight: 900; color: var(--color-accent);
+  line-height: 1.65; letter-spacing: 0.01em; text-align: left;
+  max-width: 980px; margin: 0 auto 32px;
 }
-.agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 40px; }
+.agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 16px; }
 .agent-card {
   background: #FFFFFF; border: 1px solid var(--color-border);
   border-top: 4px solid var(--color-accent);
@@ -220,7 +255,7 @@ section.alt { background: #FFFFFF; }
 .diagram {
   background: #FFFFFF; border: 1px solid var(--color-border);
   border-radius: 24px; box-shadow: var(--shadow-card);
-  padding: 48px 40px; margin-bottom: 40px;
+  padding: 40px 32px; margin-bottom: 32px;
 }
 .dg-grid { display: grid; grid-template-columns: 190px 230px 40px 1fr; grid-template-rows: 1fr 1fr; row-gap: 30px; align-items: center; }
 .dg-mode { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
@@ -254,10 +289,15 @@ section.alt { background: #FFFFFF; }
 }
 .dg-hub .hub-title { font-size: 26px; font-weight: 900; letter-spacing: 2px; margin-bottom: 18px; }
 .dg-hub img { width: 72px; height: auto; margin: 0 auto 14px; display: block; filter: brightness(1.05); }
+.dg-hub .hub-frame {
+  border: 1.5px solid rgba(255,255,255,0.28); border-radius: 12px;
+  padding: 14px 12px 12px; background: rgba(255,255,255,0.05);
+}
+.dg-hub .hub-items { width: 100%; display: flex; flex-direction: column; }
 .dg-hub .hub-item {
-  background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 10px; padding: 10px 8px; font-size: 14.5px; font-weight: 600;
-  margin-top: 10px; line-height: 1.5;
+  background: none; border: none; border-radius: 0; padding: 0;
+  font-size: 14.5px; font-weight: 600; margin-top: 8px; line-height: 1.5;
+  letter-spacing: 0.5px;
 }
 /* 上通路：客户独立站 */
 .dg-top {
@@ -338,7 +378,7 @@ section.alt { background: #FFFFFF; }
 .s7-duo {
   background: #FFFFFF; border: 1px solid var(--color-border);
   border-radius: var(--radius-card); box-shadow: var(--shadow-card);
-  padding: 30px 36px; display: flex; gap: 30px; align-items: center; margin-bottom: 36px;
+  padding: 26px 32px; display: flex; gap: 28px; align-items: center; margin-bottom: 24px;
 }
 .s7-duo .s7-p1 { padding: 0; margin: 0; flex: 1; font-size: clamp(15.5px, 1.7vw, 17.5px); color: var(--color-foreground); line-height: 2.05; }
 .s7-duo .s7-p1 p { margin: 0; }
@@ -393,7 +433,7 @@ section.alt { background: #FFFFFF; }
   background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
   border-radius: var(--radius-card); padding: 36px 42px;
   font-size: clamp(15px, 1.7vw, 17px); line-height: 2.1; color: #CBD5E1;
-  margin: 0 0 56px;
+  margin: 0 0 32px;
 }
 .s9-def strong { color: #7DD3FC; font-weight: 700; }
 .s9-figure { border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(2, 6, 23, 0.6); border: 1px solid rgba(255,255,255,0.12); }
@@ -408,26 +448,43 @@ section.alt { background: #FFFFFF; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 1024px) {
-  :root { --space-section: 72px; }
+  :root { --space-section: 48px; }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 860px) {
+  :root { --space-section: 26px; }
   .container { padding: 0 20px; }
   .grid-2x2 { grid-template-columns: 1fr 1fr; gap: 12px; }
   .grid-4 { gap: 16px; }
   .grid-2, .agent-grid, .s11-grid { grid-template-columns: 1fr; }
   .split, .s8-grid { grid-template-columns: 1fr; gap: 36px; }
+  .s3-left { display: contents; }
+  .split .lead-text { order: 1; }
+  .split .png-plain { order: 2; }
+  .split .cap-row { order: 3; }
   /* 产品胶囊：单行排布，缩小但保持深色突出 */
-  .chip-row { display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; margin-bottom: 40px; }
-  .chip-row .chip { margin: 0 2px; padding: 9px 9px; font-size: 11px; letter-spacing: 0; white-space: nowrap; }
+  .chip-row { display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; margin-bottom: 24px; }
+  .chip-row .chip { margin: 0 2px; padding: 9px 10px; font-size: 11px; letter-spacing: 0; white-space: nowrap; }
+  html[lang="en"] .chip-row .chip { font-size: 10px; padding: 8px 4px; margin: 0; }
+  html[lang="en"] .chip-row .plus { font-size: 12px; }
   .chip-row .plus { margin: 0 1px; font-size: 13px; }
   .m-brk { display: block; }
   /* 大机器图缩小居中 */
   .png-plain img { max-width: 240px; margin: 0 auto; }
-  /* 交易流程：保持桌面横向排版，整体缩小 */
-  .flow-row { flex-wrap: nowrap; margin-bottom: 28px; }
-  .flow-step { flex: 1 1 0; min-width: 0; max-width: none; padding: 10px 8px; font-size: 12px; line-height: 1.55; }
-  .flow-arrow { font-size: 15px; padding: 0 3px; }
+  /* 交易流程：手机端 2×2 S 形动线 */
+  .flow-row { display: grid; grid-template-columns: 1fr 26px 1fr; grid-template-rows: auto 26px auto; gap: 8px 0; margin-bottom: 28px; }
+  .flow-step { flex: none; min-width: 0; max-width: none; padding: 12px 10px; font-size: 12.5px; line-height: 1.6; }
+  .flow-step:nth-child(1) { grid-area: 1 / 1; }
+  .flow-arrow:nth-child(2) { grid-area: 1 / 2; padding: 0; }
+  .flow-step:nth-child(3) { grid-area: 1 / 3; }
+  .flow-arrow:nth-child(4) { grid-area: 2 / 3; transform: rotate(90deg); padding: 0; }
+  .flow-step:nth-child(5) { grid-area: 3 / 3; }
+  .flow-arrow:nth-child(6) { grid-area: 3 / 2; transform: rotate(180deg); padding: 0; }
+  .flow-step:nth-child(7) { grid-area: 3 / 1; }
+  .flow-arrow { font-size: 15px; }
+  /* 模块间距统一：消除收尾边距叠加 */
+  .container > *:last-child { margin-bottom: 0; }
+  .diagram { margin-bottom: 0; }
   /* 智能体卡片紧凑化（保持桌面排版结构） */
   .agent-card { padding: 18px 16px; }
   .agent-card h3 { font-size: 17px; margin-bottom: 8px; }
@@ -435,9 +492,21 @@ section.alt { background: #FFFFFF; }
   .agent-card p { font-size: 13.5px; line-height: 1.8; }
   .agent-card.wide { flex-direction: row; text-align: left; gap: 12px; }
   .agent-card.wide h3 { flex: 0 0 auto; }
-  .a2a-banner { padding: 20px 16px; font-size: 15px; }
-  .hero { padding: 72px 0 64px; }
-  .hero-badge { font-size: 16px; letter-spacing: 3px; padding: 12px 28px; margin-bottom: 30px; }
+  .a2a-line { font-size: 18px; }
+  .hero { padding: 32px 0 24px; }
+  .hero-badge { font-size: 15px; letter-spacing: 3px; padding: 10px 22px; margin-bottom: 14px; }
+  .hero-sub { font-size: 19px; margin-bottom: 12px; }
+  .hero-figure { max-width: 260px; }
+  .hero-contact { gap: 6px 8px; padding: 10px 8px; font-size: 10px; margin-top: 14px; }
+  .hero-contact span { white-space: nowrap; letter-spacing: -0.1px; }
+  .cap-row { display: grid; grid-template-columns: 1fr 1fr; justify-items: center; gap: 10px 12px; margin-top: 28px; }
+  .cap { padding: 9px 14px; font-size: 12.5px; letter-spacing: 0; white-space: nowrap; }
+  .s8-badge { font-size: 15px; margin: 0 auto 28px; }
+  .s10-sub { margin: -14px 0 28px; }
+  .dg-hub .hub-frame { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px; }
+  .dg-hub .hub-items { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .dg-hub img { width: 64px; flex: 0 0 64px; margin: 0; }
+  .dg-hub .hub-item { flex: 0 0 auto; margin: 0; }
   .s7-duo { flex-direction: column; padding: 22px 20px; align-items: stretch; }
   .s7-duo img { width: 100%; flex: none; }
   .s9-def { padding: 24px 20px; }
@@ -445,7 +514,7 @@ section.alt { background: #FFFFFF; }
   .diagram { padding: 20px 12px; }
   .dg-top, .dg-group { min-width: 0; }
   .dg-varr.r1, .dg-varr.r2 { display: none; }
-  .dg-grid { grid-template-columns: 1fr 1fr; gap: 10px 12px; align-items: start; }
+  .dg-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: none; grid-auto-rows: auto; gap: 10px 12px; align-items: start; }
   /* 对应关系：授权站（紫）↔ AI贸易群黄框（左），代验代卖（蓝）↔ 客户独立站（右） */
   .dg-mode.m2 { grid-column: 1; grid-row: 1; }
   .dg-mode.m1 { grid-column: 2; grid-row: 1; }
@@ -455,7 +524,7 @@ section.alt { background: #FFFFFF; }
   .dg-hub { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 12px; padding: 16px 12px; }
   .dg-hub .hub-title { width: 100%; text-align: center; font-size: 20px; margin-bottom: 0; }
   .dg-hub img { width: 60px; margin: 0; }
-  .dg-hub .hub-item { flex: 1 1 110px; margin: 0; font-size: 12.5px; }
+  .dg-hub .hub-item { font-size: 12.5px; }
   .dg-varr.m-drop { display: flex; justify-content: center; }
   .dg-varr.m-drop.d1 { grid-column: 1; grid-row: 3; }
   .dg-varr.m-drop.d2 { grid-column: 2; grid-row: 3; }
@@ -487,7 +556,7 @@ section.alt { background: #FFFFFF; }
   .dg-merchant .chip-top { order: 2; margin: 5px auto 0; }
   /* 同售标签：箭头中部左侧，箭头保持列内居中 */
   .dg-fan > .dg-farrow:nth-child(2) { position: relative; }
-  .dg-fan > .dg-farrow:nth-child(2) .lbl { position: absolute; right: calc(50% + 15px); top: 50%; transform: translateY(-50%); margin: 0; font-size: 11px; white-space: nowrap; }
+  .dg-fan > .dg-farrow:nth-child(2) .lbl { position: absolute; left: calc(50% + 15px); right: auto; top: 50%; transform: translateY(-50%); margin: 0; font-size: 11px; white-space: nowrap; }
   /* 小群/大群单行（m-blk 行内）；步骤框字号微缩保证一行放得下 */
   .dg-fan .dg-step { font-size: 11px; padding: 8px 2px; }
   .d-brk { display: none; }
@@ -502,8 +571,46 @@ section.alt { background: #FFFFFF; }
   .dg-step { font-size: 11.5px; padding: 8px 5px; }
   .dg-under { width: 50%; margin: 14px 0 0; }
   .dg-platform { font-size: 12px; padding: 6px 10px; }
+  /* 格式写死：手机端一律固定字号，不随视口宽度/入口变化（配合text-size-adjust禁缩放） */
+  .hero h1 { font-size: 30px; }
+  .sec-head h2 { font-size: 30px; }
+  .s4-title { font-size: 28px; }
+  .s8-title { font-size: 26px; }
+  .dark-section .sec-head h2 { font-size: 22px; }
+  .lead-text { font-size: 18px; }
+  .s4-body { font-size: 16px; }
+  .s7-duo .s7-p1 { font-size: 15.5px; }
+  .s8-body { font-size: 15.5px; }
+  .s9-lead { font-size: 17px; }
+  .s9-def { font-size: 15px; }
+  .s10-sub { font-size: 16px; }
+  .sec-orn .part { font-size: 12px; letter-spacing: 1px; }
   .dg-platform span { font-size: 10.5px; }
 }
+
+/* ---- wb controls: lang toggle + back-to-top ---- */
+.wb-lang { position: absolute; top: 14px; right: 14px; z-index: 999; display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,0.92); border: 1px solid var(--color-border); color: var(--color-primary); font-size: 13px; font-weight: 800; letter-spacing: 1px; cursor: pointer; box-shadow: var(--shadow-card); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); user-select: none; }
+.wb-fab { position: fixed; right: 14px; bottom: 16px; z-index: 999; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+.wb-fab.show { opacity: 1; transform: none; pointer-events: auto; }
+.wb-circle { width: 46px; height: 46px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.92); border: 1px solid var(--color-border); color: var(--color-primary); font-size: 13px; font-weight: 800; letter-spacing: 0.5px; cursor: pointer; box-shadow: var(--shadow-card); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); user-select: none; }
+.wb-circle svg { width: 20px; height: 20px; }
+@media (max-width: 860px) {
+  .wb-lang { top: 10px; right: 10px; height: 34px; padding: 0 13px; font-size: 12px; }
+  .wb-circle { width: 44px; height: 44px; }
+  .wb-fab { right: 10px; bottom: 12px; }
+}
+@media (max-width: 359px) { .cap { white-space: normal; text-align: center; } }
+html[lang="en"] .dg-step .st-sub { white-space: normal; }
+html[lang="en"] .dg-chip { white-space: normal; }
+html[lang="en"] .en-hide { display: none; }
+html[lang="en"] .en-bold { font-weight: 700; }
+/* EN 桌面端：图内胶囊保持单行（mobile 仍允许换行），merchant 悬浮胶囊解除绝对定位半宽约束 */
+@media (min-width: 861px) {
+  html[lang="en"] .dg-chip { white-space: nowrap; font-size: 11.5px; padding: 4px 10px; }
+  html[lang="en"] .dg-merchant .dg-chip { width: max-content; }
+}
+@media (max-width: 374px) { html, body { overflow-x: clip; } }
+@media (max-width: 359px) { .chip-row { flex-direction: column; gap: 8px; } .chip-row .chip { padding: 9px 12px; } }
 </style>
 </head>
 <body>
@@ -517,8 +624,15 @@ section.alt { background: #FFFFFF; }
     </div>
     <h1 class="reveal">UsedPhoneHub.com</h1>
     <p class="hero-sub reveal">网站马上开放，敬请期待！</p>
+    <div class="scroll-hint reveal"><span>滑动了解更多</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
     <div class="hero-figure reveal">
-      <img src="assets/hero-product-family.png" alt="mDetectBot 产品体系全家福">
+      <img src="assets/hero-product-family.webp" alt="mDetectBot 产品体系全家福">
+    </div>
+    <div class="hero-contact reveal">
+      <span><b>Wechat:</b> 13073041784</span>
+      <span><b>WhatsApp:</b> 18998423445</span>
+      <span><b>Tel:</b> +86 13073041784 (Mr.Wu)</span>
+      <span><b>E-mail:</b> business@epbox.cn</span>
     </div>
   </div>
 </header>
@@ -527,8 +641,8 @@ section.alt { background: #FFFFFF; }
 <section class="alt">
   <div class="container">
     <div class="sec-head reveal">
-      <div class="sec-orn orn-a"><span class="pill pill1"></span><span class="pill pill2"></span></div>
-      <h2>mDetectBot AI产品体系</h2>
+      <div class="sec-orn"><span class="part">1</span></div>
+      <h2>mDetectBot <br class="m-brk">AI产品体系</h2>
       <div class="sec-rule"></div>
     </div>
     <div class="chip-row reveal">
@@ -539,10 +653,10 @@ section.alt { background: #FFFFFF; }
       <span class="chip">AI贸易群</span>
     </div>
     <div class="grid-2x2">
-      <div class="img-card reveal"><img src="assets/s2-warehouse-inbound.png" alt="入仓区 · 包裹信息识别与一键入库"></div>
-      <div class="img-card reveal"><img src="assets/s2-qa-listing.png" alt="质检完成 · 手机信息扫码上架"></div>
-      <div class="img-card reveal"><img src="assets/s2-warehouse-zones.png" alt="入库区 · 质检区 · 智能货架区"></div>
-      <div class="img-card reveal"><img src="assets/s2-sales-office.jpg" alt="销售与电商 · 一键多平台同售"></div>
+      <div class="img-card reveal"><img src="assets/s2-warehouse-inbound.webp" alt="入仓区 · 包裹信息识别与一键入库"></div>
+      <div class="img-card reveal"><img src="assets/s2-qa-listing.webp" alt="质检完成 · 手机信息扫码上架"></div>
+      <div class="img-card reveal"><img src="assets/s2-warehouse-zones.webp" alt="入库区 · 质检区 · 智能货架区"></div>
+      <div class="img-card reveal"><img src="assets/s2-sales-office.webp" alt="销售与电商 · 一键多平台同售"></div>
     </div>
   </div>
 </section>
@@ -551,16 +665,17 @@ section.alt { background: #FFFFFF; }
 <section>
   <div class="container">
     <div class="split">
-      <p class="lead-text reveal">MDetectBot高度集成了视觉识别AI、插线传感AI、机器人、自动化流水线等硬科技技术，<strong>2分钟</strong>完成二手手机的<strong>上百项质检项目</strong>，全无人自动，即使在深夜也可以自行工作。</p>
-      <div class="png-plain reveal">
-        <img src="assets/s3-machine.png" alt="壹准验机机器人 mDetectBot">
-      </div>
+      <div class="s3-left"><p class="lead-text reveal">MDetectBot高度集成了视觉识别AI、插线传感AI、机器人、自动化流水线等硬科技技术，<strong>2分钟</strong>完成二手手机的<strong>上百项质检项目</strong>，全无人自动，即使在深夜也可以自行工作。</p>
+      <div class="cap-row reveal">
+      <span class="cap">多语种适配</span>
+      <span class="cap">定价标准适配</span>
+      <span class="cap">分级标准适配</span>
+      <span class="cap">质检维度适配</span>
     </div>
-    <div class="grid-4" style="margin-top: 72px;">
-      <img class="reveal" src="assets/s3-extra-1.png" alt="多语种适配 · 可定制语种">
-      <img class="reveal" src="assets/s3-extra-2.png" alt="质检维度适配 · 可定制质检工作流程">
-      <img class="reveal" src="assets/s3-extra-3.png" alt="分级标准适配 · 可定制成色分级">
-      <img class="reveal" src="assets/s3-extra-4.png" alt="定价标准适配 · 可定制报价逻辑">
+      </div>
+      <div class="png-plain reveal">
+        <img src="assets/s3-machine.webp" alt="壹准验机机器人 mDetectBot">
+      </div>
     </div>
   </div>
 </section>
@@ -568,11 +683,11 @@ section.alt { background: #FFFFFF; }
 <!-- ============ Slide 4 · AI agent ============ -->
 <section class="alt">
   <div class="container">
-    <h2 class="s4-title reveal">AI自动化方式做二手手机生意！</h2>
-    <p class="s4-body reveal"><strong>AI agent</strong>：销售agent自动完成商城上架和商品描述，定价agent负责制定价格，客服agent负责回答客户的问询。</p>
+    <h2 class="s4-title reveal">AI自动化方式<br class="m-brk">做二手手机生意！</h2>
+    <p class="s4-body reveal"><strong>AI agent</strong>：<strong>销售agent</strong>自动完成商城上架和商品描述，<strong>定价agent</strong>负责制定价格，<strong>客服agent</strong>负责回答客户的问询。</p>
     <div class="grid-2">
-      <div class="img-card reveal"><img src="assets/s4-ai-buyer.jpeg" alt="AI买手对话下单"></div>
-      <div class="img-card reveal"><img src="assets/s4-agent-dashboard.png" alt="壹准二手通Agent · AI买手/AI销售/AI经分/AI财税"></div>
+      <div class="img-card reveal"><img src="assets/s4-ai-buyer.webp" alt="AI买手对话下单"></div>
+      <div class="img-card reveal"><img src="assets/s4-agent-dashboard.webp" alt="壹准二手通Agent · AI买手/AI销售/AI经分/AI财税"></div>
     </div>
   </div>
 </section>
@@ -588,14 +703,14 @@ section.alt { background: #FFFFFF; }
     <div class="flow-row reveal">
       <div class="flow-step">验机机器人解决“对齐”问题</div>
       <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step">壹准可信验机报告成为硬通货</div>
+      <div class="flow-step">壹准可信验机报告<br>成为硬通货</div>
       <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step">AI智能体基于报告数据进行自动化的供需匹配和交易磋商</div>
+      <div class="flow-step">AI智能体基于报告数据<br>进行自动化的供需匹配<br>和交易磋商</div>
       <div class="flow-arrow">&rarr;</div>
       <div class="flow-step">交易成本大幅度降低。</div>
     </div>
 
-    <div class="a2a-banner reveal">率先迈进AI电商A2A（智能体对智能体协作）时代：<br>买家的Agent和卖家的Agent之间直接协作。</div>
+    <p class="a2a-line reveal">率先迈进AI电商A2A（智能体对智能体协作）时代：买家的Agent和卖家的Agent之间直接协作。</p>
 
     <div class="agent-grid">
       <div class="agent-card reveal">
@@ -618,8 +733,8 @@ section.alt { background: #FFFFFF; }
 <section class="alt">
   <div class="container">
     <div class="sec-head reveal">
-      <div class="sec-orn orn-b"><span class="pill pill1"></span><span class="pill pill2"></span></div>
-      <h2>UPHub联盟<br class="m-brk">（UPHub Alliance）</h2>
+      <div class="sec-orn"><span class="part">2</span></div>
+      <h2>UPHub联盟<br class="m-brk"><span class="en-hide">（UPHub Alliance）</span></h2>
       <div class="sec-rule"></div>
     </div>
     <p class="s4-body reveal">全世界的<strong>mDetectBot AI产品</strong>的用户<br class="m-brk">可加入<strong>UPHub联盟</strong>。</p>
@@ -638,9 +753,13 @@ section.alt { background: #FFFFFF; }
         <!-- 壹准Hub -->
         <div class="dg-hub dg-hubcell">
           <div class="hub-title">壹准Hub</div>
-          <img src="assets/s6-machine-thumb.png" alt="">
-          <div class="hub-item">壹准验机机器人</div>
-          <div class="hub-item">《标准质检报告》</div>
+          <div class="hub-frame">
+            <img src="assets/s6-machine-thumb.webp" alt="">
+            <div class="hub-items">
+              <div class="hub-item">壹准验机机器人</div>
+              <div class="hub-item">《标准质检报告》</div>
+            </div>
+          </div>
         </div>
         <div class="dg-varr m-drop d1 c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         <div class="dg-varr m-drop d2 c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
@@ -704,14 +823,14 @@ section.alt { background: #FFFFFF; }
   <div class="container">
     <div class="s7-duo reveal">
       <p class="s7-p1">UPHub联盟成员之间，通过<strong>机互汇</strong>（UPMAG，Used Phone Mutual Aid &amp; Trading Group）可以相互成为<strong>“共享仓”</strong>。（特别是对国外成员，他们去各个国家“投标”采购之后，没必要都运回到本地或者香港、迪拜，然后再卖到全世界。“共享仓”的做法是：在货源采购地入共享仓，mDetectBot检测后，再决策分配，需要翻新整备的运回翻新中心，一部分运回本地或香港、一部分就地存在当地共享仓，销售后由共享仓就近给客户发货，这样就可以大大节省物流和时间成本。）</p>
-      <img src="assets/s7-shared-warehouse.png" alt="共享仓 · 全球货源流通网络">
+      <img src="assets/s7-shared-warehouse.webp" alt="共享仓 · 全球货源流通网络">
     </div>
     <div class="s7-duo reveal">
       <div class="s7-p1">
         <p>UPHub联盟成员之间，通过<strong>机互汇</strong>，把各自好卖的货品卖的更多更好，把不好卖的转给其他成员去卖。</p>
         <p>UPHub联盟使世界范围<strong>“去中心化、去中间层”</strong>，香港、迪拜等是大Hub，其他地区国家是小Hub，形成一张高效的网络。</p>
       </div>
-      <img src="assets/s7-decentralized.png" alt="去中心化网络 · 全球高效协作网络">
+      <img src="assets/s7-decentralized.webp" alt="去中心化网络 · 全球高效协作网络">
     </div>
   </div>
 </section>
@@ -719,10 +838,10 @@ section.alt { background: #FFFFFF; }
 <!-- ============ Slide 8 · UPHub联盟 与 AI贸易群的关系 ============ -->
 <section class="alt">
   <div class="container">
-    <h2 class="s8-title reveal">UPHub联盟 与 AI贸易群的关系</h2>
+    <h2 class="s8-title reveal">UPHub联盟 <br class="m-brk">与 AI贸易群的关系</h2>
     <div class="s8-badge reveal">UPHub联盟成员是AI贸易群的A类商户</div>
-    <div class="img-card reveal"><img src="assets/s8-relationship.png" alt="UPHub联盟与AI贸易群关系图"></div>
-    <p class="s8-body reveal" style="margin-top: 44px;"><strong>机互汇（二手手机互助贸易群）</strong>UPMAG（Used Phone Mutual Aid &amp; Trading Group）：是AI贸易群中的小群，仅对壹准联盟成员开放。</p>
+    <div class="img-card reveal"><img src="assets/s8-relationship.webp" alt="UPHub联盟与AI贸易群关系图"></div>
+    <p class="s8-body reveal" style="margin-top: 44px;"><span class="en-hide"><strong>机互汇（二手手机互助贸易群）</strong></span><span class="en-bold">UPMAG（Used Phone Mutual Aid &amp; Trading Group）：</span>是AI贸易群中的小群，仅对壹准联盟成员开放。</p>
   </div>
 </section>
 
@@ -736,7 +855,7 @@ section.alt { background: #FFFFFF; }
     <p class="s9-lead reveal">UPHub联盟成员可进一步在本国本地区发展成<strong>自有品牌的交易中心</strong>（mDetectbot-Powered Used Phone Trading Hub）。</p>
     <div class="s9-def reveal"><strong>mDetectbot‑Powered Used Phone Trading Hub</strong>：由mDetectbot（壹准验机机器人）驱动的二手手机交易枢纽（交易中心、集散平台），提供一套以 mDetectbot自动化验机机器人 为核心能力的二手手机交易体系，集<strong>自动质检、验机报告、报价、库存（共享仓）、交易结算、供应链金融</strong>于一体，面向二手门店、回收商、批发供应链，实现标准化的二手手机流转交易枢纽。</div>
     <div class="s9-figure reveal">
-      <img src="assets/s9-trading-hub.png" alt="mDetectbot驱动的二手手机交易枢纽">
+      <img src="assets/s9-trading-hub.webp" alt="mDetectbot驱动的二手手机交易枢纽">
     </div>
   </div>
 </section>
@@ -749,12 +868,12 @@ section.alt { background: #FFFFFF; }
       <div class="sec-rule"></div>
     </div>
     <p class="s10-sub reveal">（A类商户可卖可买，B类注册商户只能买）</p>
-    <div class="img-card reveal"><img src="assets/s10-flow.jpg" alt="授权质检站生成质检报告 → 自动上架AI商城 → 全球多国买家轻松购买"></div>
+    <div class="img-card reveal"><img src="assets/s10-flow.webp" alt="授权质检站生成质检报告 → 自动上架AI商城 → 全球多国买家轻松购买"></div>
     <div class="s11-grid" style="margin-top: 28px;">
-      <div class="img-card reveal"><img src="assets/s11-report-mall.png" alt="质检报告与AI智能定价 · 商城详情页"></div>
-      <div class="img-card reveal"><img src="assets/s11-hk-store.jpeg" alt="香港授权质检站门店"></div>
-      <div class="img-card reveal"><img src="assets/s11-global-buyers.jpeg" alt="全球多国买家通过AI买手下单"></div>
-      <div class="img-card reveal"><img src="assets/s11-deal.jpeg" alt="竞拍成交 · 货款结算"></div>
+      <div class="img-card reveal"><img src="assets/s11-report-mall.webp" alt="质检报告与AI智能定价 · 商城详情页"></div>
+      <div class="img-card reveal"><img src="assets/s11-hk-store.webp" alt="香港授权质检站门店"></div>
+      <div class="img-card reveal"><img src="assets/s11-global-buyers.webp" alt="全球多国买家通过AI买手下单"></div>
+      <div class="img-card reveal"><img src="assets/s11-deal.webp" alt="竞拍成交 · 货款结算"></div>
     </div>
   </div>
 </section>
@@ -801,8 +920,14 @@ section.alt { background: #FFFFFF; }
       var avail = d.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) - 2;
       if (nat > avail) {
         Z = avail / nat;
-        d.style.zoom = Z;
-        grid.style.width = 'max-content';
+        if (window.CSS && CSS.supports && CSS.supports('zoom', '1.5')) {
+          d.style.zoom = Z;
+          grid.style.width = 'max-content';
+        } else {
+          d.style.overflowX = 'auto';
+          grid.style.width = 'max-content';
+          Z = 1;
+        }
       } else {
         Z = 1;
       }
@@ -831,5 +956,126 @@ section.alt { background: #FFFFFF; }
 })();
 </script>
 
+<script>
+(function () {
+  var sh = document.querySelector('.scroll-hint');
+  if (!sh) return;
+  var m = window.matchMedia('(prefers-reduced-motion: reduce)');
+  sh.addEventListener('click', function () {
+    var t = document.querySelector('.sec-orn');
+    if (t) t.scrollIntoView({ behavior: m.matches ? 'auto' : 'smooth', block: 'start' });
+  });
+})();
+</script>
+<div class="wb-lang" id="wbLangTop" role="button" aria-label="Switch language / 切换语言">EN</div>
+<div class="wb-fab" id="wbFab">
+  <div class="wb-circle" id="wbLangFab" role="button" aria-label="Switch language / 切换语言">EN</div>
+  <div class="wb-circle" id="wbTop" role="button" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </div>
+</div>
+
+<script>
+/* ---- wb i18n + back-to-top ---- */
+(function () {
+  var T = {"网站马上开放，敬请期待！": "Launching Soon — Stay Tuned!", "滑动了解更多": "Swipe to Explore", "AI产品体系": "AI Product Portfolio", "mDetectBot验机机器人": "mDetectBot Inspection Robot", "AI贸易群": "AI Trading Platform", "MDetectBot高度集成了视觉识别AI、插线传感AI、机器人、自动化流水线等硬科技技术，": "MDetectBot integrates vision AI, plug-in sensor AI, robotics and automated production lines. In just ", "2分钟": "2 minutes ", "完成二手手机的": "it completes ", "上百项质检项目": "100+ inspection items", "，全无人自动，即使在深夜也可以自行工作。": " for a used phone — fully unmanned and automated, working even through the night.", "多语种适配": "Multilingual Support", "定价标准适配": "Pricing Standards", "分级标准适配": "Grading Standards", "质检维度适配": "QC Dimensions", "AI自动化方式": "Run Your Used-Phone Business", "做二手手机生意！": "with AI Automation!", "销售agent": "Sales Agent ", "自动完成商城上架和商品描述，": "auto-lists products and writes descriptions, ", "定价agent": "Pricing Agent ", "负责制定价格，": "sets the prices, ", "客服agent": "Support Agent ", "负责回答客户的问询。": "and handles customer inquiries.", "基于机器人标准验机的": "An AI Trading Platform Built on", "AI交易平台": "Robot-Standard Inspection:", "验机机器人解决“对齐”问题": "The inspection robot solves the “alignment” problem", "壹准可信验机报告": "Trusted mDetectBot inspection reports", "成为硬通货": "become the gold standard", "AI智能体基于报告数据": "AI agents use the report data", "进行自动化的供需匹配": "for automated supply–demand matching", "和交易磋商": "and trade negotiation", "交易成本大幅度降低。": "Transaction costs drop dramatically.", "率先迈进AI电商A2A（智能体对智能体协作）时代：买家的Agent和卖家的Agent之间直接协作。": "Pioneering the A2A (agent-to-agent) era of AI e-commerce: the buyer's agents collaborate directly with the seller's agents.", "买方智能体": "Buyer Agent", "是懂行懂老板的“贴身管家”，在互动中不断熟悉老板和自家公司策略。": "A knowledgeable “personal concierge” that learns your business and your strategy through every interaction.", "卖方智能体": "Seller Agent", "是“数字掌柜”，二十四小时守在后台，随时报出自家货品的真实性能、库存数量和底线价格。": "A “digital shopkeeper” on duty 24/7, ready to report the real condition, stock levels and bottom-line prices of your goods at any time.", "买方智能体跟成千上万个卖家的": "Buyer agents negotiate with thousands of sellers' ", "“数字掌柜”": "“digital shopkeepers”", "（客服智能体、定价智能体、销售智能体）在后台飞速询盘、问货、报价、核对细节。": " (support, pricing and sales agents) — sending inquiries, checking stock, quoting and verifying details at high speed.", "UPHub联盟": "UPHub Alliance", "UPHub联盟 ": "UPHub Alliance ", "UPHub 联盟": "UPHub Alliance", "全世界的": "Users of ", "mDetectBot AI产品": "mDetectBot AI products", "的用户": " worldwide", "可加入": " can join ", "代验": "Inspect-for-You", "代卖": "Sell-for-You", "授权站": "Authorized Station", "自验自卖": "Self-Inspect & Sell", "壹准Hub": "mDetectBot Hub", "壹准验机机器人": "mDetectBot Inspection Robot", "《标准质检报告》": "Standard QC Report", "AI销售师": "AI Sales Specialist", "AI定价": "AI Pricing", "AI上架": "AI Listing", "AI客服": "AI Support", "客户独立站（自有渠道）": "Client's Own Site (Own Channel)", "AI买手": "AI Buyer", "下游商家": "Downstream Merchants", "同售": "Co-Sell", "AI贸易": "AI Trading ", "小群": "Targeted-Exposure Platform", "(定向曝光)": "", "大群": "Main Platform", "全球采购商": "Global Buyers", "（壹准国际B2B AI 贸易平台）": "(mDetectBot International B2B AI Trading Platform)", "UPHub联盟成员之间，通过": "Among UPHub Alliance members, through ", "机互汇": "UPMAG", "（UPMAG，Used Phone Mutual Aid & Trading Group）可以相互成为": " (Used Phone Mutual Aid & Trading Group), members can become ", "“共享仓”": "“Shared Warehouses”", "。（特别是对国外成员，他们去各个国家“投标”采购之后，没必要都运回到本地或者香港、迪拜，然后再卖到全世界。“共享仓”的做法是：在货源采购地入共享仓，mDetectBot检测后，再决策分配，需要翻新整备的运回翻新中心，一部分运回本地或香港、一部分就地存在当地共享仓，销售后由共享仓就近给客户发货，这样就可以大大节省物流和时间成本。）": ". (For overseas members in particular: after “bid-winning” purchases in various countries, there is no need to ship everything back to your home base, Hong Kong or Dubai before selling worldwide. The Shared Warehouse model: goods are placed into a shared warehouse in the sourcing country, inspected by mDetectBot, then allocation is decided — units needing refurbishment go back to the refurbishment center, while the rest is stored locally, in Hong Kong, or in the local shared warehouse. After the sale, the nearest shared warehouse ships to the customer — greatly saving logistics time and cost.)", "，把各自好卖的货品卖的更多更好，把不好卖的转给其他成员去卖。": " can sell their best-moving products wider and better, and pass slow-moving stock to fellow members to sell.", "UPHub联盟使世界范围": "The UPHub Alliance makes the global market ", "“去中心化、去中间层”": "“decentralized and disintermediated”", "，香港、迪拜等是大Hub，其他地区国家是小Hub，形成一张高效的网络。": " — hubs like Hong Kong and Dubai act as major hubs while other countries serve as smaller ones, forming one highly efficient network.", "与 AI贸易群的关系": "& the AI Trading Platform", "UPHub联盟成员是AI贸易群的A类商户": "UPHub Alliance members are Class-A merchants of the AI Trading Platform", "机互汇（二手手机互助贸易群）": "UPMAG (Used-Phone Mutual-Aid Trading Community)", "UPMAG（Used Phone Mutual Aid & Trading Group）：": "UPMAG (Used Phone Mutual Aid & Trading Group): ",
+  "是AI贸易群中的小群，仅对壹准联盟成员开放。": "a VIP sub-platform within the AI Trading Platform, open exclusively to UPHub Alliance members.", "UPHub联盟成员可进一步在本国本地区发展成": "UPHub Alliance members can further develop into ", "自有品牌的交易中心": "trading hubs under their own brand", "：由mDetectbot（壹准验机机器人）驱动的二手手机交易枢纽（交易中心、集散平台），提供一套以 mDetectbot自动化验机机器人 为核心能力的二手手机交易体系，集": ": A used-phone trading hub (trading center and distribution platform) powered by the mDetectBot automated inspection robot. It provides a trading system built around mDetectbot's core capabilities, integrating ", "自动质检、验机报告、报价、库存（共享仓）、交易结算、供应链金融": "automated QC, inspection reports, quotations, inventory (shared warehouses), transaction settlement and supply-chain finance", "于一体，面向二手门店、回收商、批发供应链，实现标准化的二手手机流转交易枢纽。": " in one place — serving used-phone stores, recyclers and wholesale supply chains as a standardized used-phone trading hub.", "AI 贸易平台：aiphonemarket.com": "AI Trading Platform: aiphonemarket.com", "（A类商户可卖可买，B类注册商户只能买）": "(Class-A merchants can buy and sell; registered Class-B merchants are buyers only)", "AI 贸易平台": "AI Trading Platform",
+  "（mDetectbot-Powered Used Phone Trading Hub）。": "(mDetectbot-Powered Used Phone Trading Hub). ",
+  "：": ": ",
+  "。": ". "};
+  var en = false, saved = [];
+  function ok(n) {
+    var p = n.parentNode;
+    return p && p.nodeType === 1 && p.tagName !== 'SCRIPT' && p.tagName !== 'STYLE';
+  }
+  function toEN() {
+    var it = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null), n, v, k;
+    while (n = it.nextNode()) {
+      if (!ok(n)) continue;
+      v = n.nodeValue; if (!v) continue;
+      k = v.trim();
+      if (k && Object.prototype.hasOwnProperty.call(T, k)) { saved.push([n, v]); n.nodeValue = v.replace(k, T[k]); }
+    }
+  }
+  function toZH() { saved.forEach(function (pr) { pr[0].nodeValue = pr[1]; }); saved = []; }
+  function setLang() {
+    en = !en;
+    if (en) toEN(); else toZH();
+    var label = en ? '\u4e2d' : 'EN';
+    document.documentElement.lang = en ? 'en' : 'zh-CN';
+    [document.getElementById('wbLangTop'), document.getElementById('wbLangFab')].forEach(function (b) { if (b) b.textContent = label; });
+    try { localStorage.setItem('wb_lang', en ? 'en' : 'zh'); } catch (err) {}
+    /* 切语言后文本宽度变化，通知架构图 fit() 重算 zoom/对齐（修缩放残留/溢出） */
+    try { window.dispatchEvent(new Event('resize')); } catch (err) {}
+  }
+  var fab = document.getElementById('wbFab');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function onScroll() {
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    if (fab) fab.classList.toggle('show', y > 600);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  function bind(id, fn) { var el = document.getElementById(id); if (el) el.addEventListener('click', fn); }
+  bind('wbLangTop', setLang); bind('wbLangFab', setLang);
+  bind('wbTop', function () { window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); });
+  var savedLang = null; try { savedLang = localStorage.getItem('wb_lang'); } catch (err) {}
+  if (savedLang === 'en') setLang();
+})();
+</script>
+
+<script>
+/* ---- 字号强制缩放中和：浏览器 text zoom/强制字号时，把设计字号按实测倍数还原 ---- */
+(function () {
+  var m = 1; /* 累计声明值乘数：declared = D0 × m；目标 m = 1/k */
+  function probeK() {
+    try {
+      var d = document.createElement('div');
+      d.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;font-size:100px;line-height:1;margin:0;padding:0;border:0;';
+      d.textContent = '\u4e2d';
+      document.body.appendChild(d);
+      var k = d.getBoundingClientRect().height / 100;
+      document.body.removeChild(d);
+      return (isFinite(k) && k > 0) ? k : 1;
+    } catch (e) { return 1; }
+  }
+  function scaleRules(rules, f) {
+    for (var i = 0; i < rules.length; i++) {
+      var r = rules[i];
+      try {
+        if (r.type === 1 || r.type === 8) {
+          if (r.style && r.style.fontSize && /px\s*$/.test(r.style.fontSize)) {
+            r.style.fontSize = (parseFloat(r.style.fontSize) * f).toFixed(2) + 'px';
+          }
+        } else if (r.type === 4 || r.type === 7 || r.type === 12) {
+          scaleRules(r.cssRules, f);
+        }
+      } catch (e) {}
+    }
+  }
+  function neutralize() {
+    try {
+      var pk = (typeof window.__wbFontProbe === 'function') ? window.__wbFontProbe : probeK;
+      var k = pk();
+      if (k < 1.02) k = 1;
+      var f = 1 / (k * m);
+      if (Math.abs(f - 1) < 0.005) return;
+      var sheets = document.styleSheets;
+      for (var i = 0; i < sheets.length; i++) {
+        var s = sheets[i];
+        if (!s.ownerNode || s.ownerNode.tagName !== 'STYLE') continue;
+        try { scaleRules(s.cssRules, f); } catch (e) {}
+      }
+      m *= f;
+      try { window.dispatchEvent(new Event('resize')); } catch (e) {}
+    } catch (e) {}
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', neutralize);
+  else neutralize();
+  window.addEventListener('load', neutralize);
+  window.addEventListener('resize', neutralize);
+  setInterval(neutralize, 2000);
+})();
+</script>
 </body>
 </html>
